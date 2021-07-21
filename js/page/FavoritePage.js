@@ -1,4 +1,4 @@
-import {Component} from 'react';
+import React, {Component} from 'react';
 import {View, StyleSheet, Text} from 'react-native';
 import Colors from 'react-native/Libraries/NewAppScreen/components/Colors';
 
