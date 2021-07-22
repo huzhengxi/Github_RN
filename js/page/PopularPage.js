@@ -1,11 +1,16 @@
 import React, {Component} from 'react';
-import {View, StyleSheet, Text, SafeAreaView} from 'react-native';
+import {View, StyleSheet, Text, SafeAreaView, LogBox} from 'react-native';
 import Colors from 'react-native/Libraries/NewAppScreen/components/Colors';
 import {createAppContainer} from 'react-navigation';
 import {createMaterialTopTabNavigator} from 'react-navigation-tabs';
 
 
 export default class PopularPage extends Component {
+
+    constructor(props) {
+        super(props);
+        LogBox.ignoreAllLogs(true);
+    }
 
     render() {
         const TabNavigator = createAppContainer(createMaterialTopTabNavigator({
@@ -22,9 +27,7 @@ export default class PopularPage extends Component {
                     title: 'tab2',
                 },
             },
-        },{
-
-        }));
+        }, {}));
         return (
             <SafeAreaView style={styles.container}>
                 <TabNavigator/>
@@ -36,7 +39,7 @@ export default class PopularPage extends Component {
 
 class PopularTab extends Component {
     render() {
-        return <View >
+        return <View>
             <Text style={styles.welcome}>PopularTab</Text>
         </View>;
     }
