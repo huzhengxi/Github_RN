@@ -10,24 +10,36 @@ export default class PopularPage extends Component {
     constructor(props) {
         super(props);
         LogBox.ignoreAllLogs(true);
+        this.tabNames = ['Java', 'Android', 'iOS', 'React', 'React Native', 'PHP', 'Go', 'C++', 'C'];
+
+    }
+
+    _genTabs() {
+        const tabs = {};
+        this.tabNames.forEach((item, index) => {
+            tabs[`tab${index}`] = {
+                screen: props => <PopularTab {...props} tabLabel={item}/>,
+                navigationOptions: {
+                    title: item,
+                },
+            };
+        });
+        return tabs;
     }
 
     render() {
-        const TabNavigator = createAppContainer(createMaterialTopTabNavigator({
-            PopularTab1: {
-                screen: PopularTab,
-                navigationOptions: {
-                    title: 'tab1',
+        const TabNavigator = createAppContainer(createMaterialTopTabNavigator(this._genTabs(), {
+            tabBarOptions: {
+                tabStyle:styles.tabStyle,
+                upperCaseLabel: false,
+                scrollEnabled: true,
+                style: {
+                    backgroundColor: '#a67'
                 },
-
-            },
-            PopularTab2: {
-                screen: PopularTab,
-                navigationOptions: {
-                    title: 'tab2',
-                },
-            },
-        }, {}));
+                indicatorStyle: styles.indicatorStyle,
+                labelStyle: styles.labelStyle,
+            }
+        }));
         return (
             <SafeAreaView style={styles.container}>
                 <TabNavigator/>
@@ -53,4 +65,15 @@ const styles = StyleSheet.create({
         fontSize: 20,
         color: Colors.dark,
     },
+    tabStyle: {
+        minWidth: 30,
+    },
+    indicatorStyle: {
+        height: 2,
+        backgroundColor: 'black'
+    },
+    labelStyle: {
+        fontSize: 14,
+        marginVertical: 6,
+    }
 });
