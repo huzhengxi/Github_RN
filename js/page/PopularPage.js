@@ -3,9 +3,10 @@ import {View, StyleSheet, Text, SafeAreaView, LogBox} from 'react-native';
 import Colors from 'react-native/Libraries/NewAppScreen/components/Colors';
 import {createAppContainer} from 'react-navigation';
 import {createMaterialTopTabNavigator} from 'react-navigation-tabs';
+import {connect} from 'react-redux';
+import actions from '../action';
 
-
-export default class PopularPage extends Component {
+class PopularPage extends Component {
 
     constructor(props) {
         super(props);
@@ -30,15 +31,15 @@ export default class PopularPage extends Component {
     render() {
         const TabNavigator = createAppContainer(createMaterialTopTabNavigator(this._genTabs(), {
             tabBarOptions: {
-                tabStyle:styles.tabStyle,
+                tabStyle: styles.tabStyle,
                 upperCaseLabel: false,
                 scrollEnabled: true,
                 style: {
-                    backgroundColor: '#a67'
+                    backgroundColor: '#a67',
                 },
                 indicatorStyle: styles.indicatorStyle,
                 labelStyle: styles.labelStyle,
-            }
+            },
         }));
         return (
             <SafeAreaView style={styles.container}>
@@ -70,10 +71,16 @@ const styles = StyleSheet.create({
     },
     indicatorStyle: {
         height: 2,
-        backgroundColor: 'black'
+        backgroundColor: 'black',
     },
     labelStyle: {
         fontSize: 14,
         marginVertical: 6,
-    }
+    },
 });
+
+const mapDispatchToProps = dispatch => ({
+    onThemeChange: theme => dispatch(actions.onThemeChange(theme)),
+});
+
+export default connect(null, mapDispatchToProps)(PopularPage);
