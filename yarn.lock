@@ -5623,6 +5623,11 @@ prop-types@^15.7.2:
     object-assign "^4.1.1"
     react-is "^16.8.1"
 
+props-type@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.nlark.com/props-type/download/props-type-1.0.1.tgz#9764ae1b1be01095412112b586d7f823730c6afa"
+  integrity sha1-l2SuGxvgEJVBIRK1htf4I3MMavo=
+
 psl@^1.1.33:
   version "1.8.0"
   resolved "https://registry.nlark.com/psl/download/psl-1.8.0.tgz#9326f8bcfb013adcc005fdff056acce020e51c24"
