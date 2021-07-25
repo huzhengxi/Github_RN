@@ -2,6 +2,9 @@ import WelcomePage from '../page/WelcomePage';
 import {createStackNavigator} from 'react-navigation-stack';
 import HomePage from '../page/HomePage';
 import {createAppContainer, createSwitchNavigator} from 'react-navigation';
+import FetchDemoPage from '../page/FetchDemoPage';
+import AsyncStorageDemoPage from '../page/AsyncStorageDemoPage';
+import DataStoreDemoPage from '../page/DataStoreDemoPage';
 
 
 const InitNavigator = createStackNavigator({
@@ -18,6 +21,24 @@ const MainNavigator = createStackNavigator({
             screen: HomePage,
             navigationOptions: {
                 headerShown: false, //异常头部
+            },
+        },
+        FetchDemoPage: {
+            screen: FetchDemoPage,
+            navigationOptions: {
+                headerShown: true,
+            },
+        },
+        AsyncStorageDemoPage: {
+            screen: AsyncStorageDemoPage,
+            navigationOptions: {
+                headerShown: true,
+            },
+        },
+        DataStoreDemoPage: {
+            screen: DataStoreDemoPage,
+            navigationOptions: {
+                headerShown: true,
             },
         },
     },
