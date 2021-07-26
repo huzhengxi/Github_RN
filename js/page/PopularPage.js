@@ -7,10 +7,12 @@ import {connect} from 'react-redux';
 import actions from '../action';
 import PopularItem from '../common/PopularItem';
 import NavigationBar from '../common/NavigationBar';
+import {onLoadMorePopular} from '../action/popular';
 
 const URL = 'https://api.github.com/search/repositories?q=';
 const QUERY_STR = '&sort=stars';
 const THEME_COLOR = '#678';
+const PAGE_SIZE = 10;
 export default class PopularPage extends Component {
 
     constructor(props) {
@@ -103,10 +105,31 @@ class PopularTab extends Component {
         return <PopularItem item={item}/>;
     }
 
-    _loadData() {
-        const {onLoadPopularData} = this.props;
+    _loadData(loadMore = false) {
+        const {onLoadPopularData, onLoadMorePopular} = this.props;
         const url = this._genFetchUrl(this.storeName);
-        onLoadPopularData(this.storeName, url);
+        const store = this._store();
+        if (loadMore) {
+            onLoadMorePopular(this.storeName, ++store.pageIndex, PAGE_SIZE, store.items, callback=> {
+
+            })
+        } else {
+            onLoadPopularData(this.storeName, url, PAGE_SIZE);
+        }
+    }
+
+    _store() {
+        const {popular} = this.props;
+        let store = popular[this.storeName];
+        if (!store) {
+            store = {
+                items: [],
+                isLoading: false,
+                projectModes: [],
+                hideLoadingMore: true,
+            };
+        }
+        return store;
     }
 
     _genFetchUrl(key) {
@@ -119,7 +142,8 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    onLoadPopularData: (storeName, url) => dispatch(actions.onLoadPopularData(storeName, url)),
+    onLoadPopularData: (storeName, url, pageSize) => dispatch(actions.onLoadPopularData(storeName, url, pageSize)),
+    onLoadMorePopular: (storeName, pageIndex, pageSize, items, callback) => dispatch(actions.onLoadMorePopular(storeName, pageIndex, pageSize, items, callback)),
 });
 
 const PopularTabPage = connect(mapStateToProps, mapDispatchToProps)(PopularTab);

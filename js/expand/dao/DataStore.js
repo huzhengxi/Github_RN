@@ -1,5 +1,8 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import GitHubTrending from 'GitHubTrending/trending/GitHubTrending';
+import TrendingPage from '../../page/TrendingPage';
 
+export const FLAG_STORE = {flag_popular: Symbol('popular'), flag_trending: Symbol('trending')};
 export default class DataStore {
 
     /**
@@ -75,20 +78,35 @@ export default class DataStore {
      */
     _fetchNetData(url, flag) {
         return new Promise((resolve, reject) => {
-            fetch(url)
-                .then((response) => {
-                    if (response.ok) {
-                        return response.json();
-                    }
-                    throw new Error('Network response was not ok.');
-                })
-                .then((responseData) => {
-                    this._saveData(url, responseData);
-                    resolve(responseData);
-                })
-                .catch(e => {
+            if (flag === FLAG_STORE.flag_popular) {
+                fetch(url)
+                    .then((response) => {
+                        if (response.ok) {
+                            return response.json();
+                        }
+                        throw new Error('Network response was not ok.');
+                    })
+                    .then((responseData) => {
+                        this._saveData(url, responseData);
+                        resolve(responseData);
+                    })
+                    .catch(e => {
+                        reject(e);
+                    });
+            } else {
+                new GitHubTrending().fetchTrending(url)
+                    .then(items => {
+                        if (!items) {
+                            throw new Error('responseData is null');
+                        } else {
+                            this._saveData(url, items);
+                            resolve(items);
+                        }
+                    }).catch(e => {
                     reject(e);
                 });
+            }
+
         });
     }
 
