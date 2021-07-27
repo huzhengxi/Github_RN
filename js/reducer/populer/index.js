@@ -9,7 +9,7 @@ export default function onAction(state = defaultState, action) {
                 [action.storeName]: {
                     ...state[action.storeName],
                     items: action.items,
-                    projectModes: action.projectModes,
+                    projectModels: action.projectModels,
                     isLoading: false,
                     hideLoadingMore: false,
                     pageIndex: action.pageIndex,
@@ -18,22 +18,27 @@ export default function onAction(state = defaultState, action) {
         case types.POPULAR_REFRESH: //下拉刷新
             return {
                 ...state,
-                isLoading: true,
+                [action.storeName]: {
+                    hideLoadingMore: true,
+                    isLoading: true,
+                },
             };
         case types.POPULAR_REFRESH_FAIL: //下拉刷新失败
             return {
                 ...state,
                 [action.storeName]: {
                     ...state[action.storeName],
+                    hideLoadingMore: false,
+                    isLoading: false,
                 },
-                isLoading: false,
+
             };
         case types.POPULAR_LOAD_MORE_SUCCESS: //上拉刷新成功
             return {
                 ...state,
                 [action.storeName]: {
                     ...state[action.storeName],
-                    projectModes: action.projectModes,
+                    projectModels: action.projectModels,
                     hideLoadingMore: false,
                     pageIndex: action.pageIndex,
                 },
@@ -41,9 +46,10 @@ export default function onAction(state = defaultState, action) {
         case types.POPULAR_LOAD_MORE_FAIL: //上拉刷新失败
             return {
                 ...state,
-                ...state[action.storeName],
-                hideLoadingMore: true,
-                pageIndex: action.pageIndex,
+                [action.storeName]: {
+                    ...state[action.storeName],
+                    hideLoadingMore: true,
+                },
             };
         default:
             return state;

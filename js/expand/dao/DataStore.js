@@ -10,7 +10,7 @@ export default class DataStore {
      * @param url  获取数据的url
      * @param flag
      */
-    fetchData(url, flag = false) {
+    fetchData(url, flag = FLAG_STORE.flag_popular) {
         return new Promise((resolve, reject) => {
             this._fetchLocalData(url).then((wrapData) => {
                 if (wrapData && DataStore.checkTimestampValid(wrapData.timestamp)) {

@@ -49,7 +49,7 @@ export function onLoadMorePopular(storeName, pageIndex, pageSize, dataArray = []
                     error: 'no more',
                     storeName,
                     pageIndex: --pageIndex,
-                    projectModes: dataArray,
+                    projectModels: dataArray,
                 });
             } else {
                 //计算本次可载入的最大数据量
@@ -58,10 +58,10 @@ export function onLoadMorePopular(storeName, pageIndex, pageSize, dataArray = []
                     type: types.POPULAR_LOAD_MORE_SUCCESS,
                     storeName,
                     pageIndex,
-                    projectName: dataArray.slice(0, max),
+                    projectModels: dataArray.slice(0, max),
                 });
             }
-        }, 200);
+        }, 500);
     };
 }
 
@@ -72,7 +72,8 @@ function handleData(dispatch, storeName, data, pageSize) {
     }
     dispatch({
         type: types.POPULAR_REFRESH_SUCCESS,
-        projectName: pageSize > fixItem.length ? fixItem : fixItem.slice(0, pageSize),
+        items: fixItem,
+        projectModels: pageSize > fixItem.length ? fixItem : fixItem.slice(0, pageSize),
         storeName,
         pageIndex: 1,
     });

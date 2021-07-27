@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {FlatList, LogBox, RefreshControl, SafeAreaView, StyleSheet, Text, View} from 'react-native';
+import {ActivityIndicator, FlatList, LogBox, RefreshControl, SafeAreaView, StyleSheet, Text, View} from 'react-native';
 import Colors from 'react-native/Libraries/NewAppScreen/components/Colors';
 import {createAppContainer} from 'react-navigation';
 import {createMaterialTopTabNavigator} from 'react-navigation-tabs';
@@ -7,7 +7,7 @@ import {connect} from 'react-redux';
 import actions from '../action';
 import PopularItem from '../common/PopularItem';
 import NavigationBar from '../common/NavigationBar';
-import {onLoadMorePopular} from '../action/popular';
+import Toast from 'react-native-easy-toast';
 
 const URL = 'https://api.github.com/search/repositories?q=';
 const QUERY_STR = '&sort=stars';
@@ -76,28 +76,45 @@ class PopularTab extends Component {
     }
 
     render() {
-        const {popular} = this.props;
-        let store = popular[this.storeName];
-        if (!store) {
-            store = {
-                items: [],
-                isLoading: false,
-            };
-        }
+        let store = this._store();
         return (
             <View style={styles.container}>
                 <FlatList
-                    data={store.items}
+                    data={store.projectModels}
                     renderItem={data => this._renderItem(data)}
                     keyExtractor={item => '' + item.id}
                     refreshControl={
-                        <RefreshControl refreshing={store.isLoading} title={'Loading'} titleColor={THEME_COLOR}
+                        <RefreshControl refreshing={store.isLoading || false} title={'Loading'} titleColor={THEME_COLOR}
                                         colors={[THEME_COLOR]} onRefresh={() => this._loadData()}
                                         tintColor={THEME_COLOR}/>
                     }
+                    ListFooterComponent={() => this._genIndicator()}
+                    onEndReached={() => {
+                        setTimeout(() => {
+                            if (this.canLoadMore) {
+                                this._loadData(true);
+                                this.canLoadMore = false;
+                            }
+                        }, 100);
+
+                    }}
+                    onEndReachedThreshold={0.5}
+                    onMomentumScrollBegin={() => {
+                        this.canLoadMore = true;
+                    }}
                 />
+                <Toast ref={'toast'} position={'center'}/>
             </View>
         );
+    }
+
+    _genIndicator() {
+        console.log('this._store().hideLoadingMore:', this._store().hideLoadingMore)
+        return this._store().hideLoadingMore ? null :
+            <View style={styles.indicatorContainer}>
+                <ActivityIndicator style={styles.indicator}/>
+                <Text style={styles.labelStyle}>正在加载更多</Text>
+            </View>;
     }
 
     _renderItem(data) {
@@ -110,9 +127,9 @@ class PopularTab extends Component {
         const url = this._genFetchUrl(this.storeName);
         const store = this._store();
         if (loadMore) {
-            onLoadMorePopular(this.storeName, ++store.pageIndex, PAGE_SIZE, store.items, callback=> {
-
-            })
+            onLoadMorePopular(this.storeName, ++store.pageIndex, PAGE_SIZE, store.items, callback => {
+                this.refs.toast.show('没有更多了');
+            });
         } else {
             onLoadPopularData(this.storeName, url, PAGE_SIZE);
         }
@@ -125,7 +142,7 @@ class PopularTab extends Component {
             store = {
                 items: [],
                 isLoading: false,
-                projectModes: [],
+                projectModels: [],
                 hideLoadingMore: true,
             };
         }
@@ -174,7 +191,13 @@ const styles = StyleSheet.create({
     },
     listItemText: {
         backgroundColor: '#faa',
-
+    },
+    indicatorContainer: {
+        alignItems: 'center',
+    },
+    indicator: {
+        color: 'red',
+        margin: 10,
     },
 });
 
