@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {ActivityIndicator, FlatList, LogBox, RefreshControl, SafeAreaView, StyleSheet, Text, View} from 'react-native';
+import {ActivityIndicator, FlatList, LogBox, RefreshControl, SafeAreaView, StyleSheet, Text, View,DeviceEventEmitter} from 'react-native';
 import Colors from 'react-native/Libraries/NewAppScreen/components/Colors';
 import {createAppContainer} from 'react-navigation';
 import {createMaterialTopTabNavigator} from 'react-navigation-tabs';
@@ -109,7 +109,6 @@ class PopularTab extends Component {
     }
 
     _genIndicator() {
-        console.log('this._store().hideLoadingMore:', this._store().hideLoadingMore)
         return this._store().hideLoadingMore ? null :
             <View style={styles.indicatorContainer}>
                 <ActivityIndicator style={styles.indicator}/>

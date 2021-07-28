@@ -1,7 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import GitHubTrending from 'GitHubTrending/trending/GitHubTrending';
-import TrendingPage from '../../page/TrendingPage';
-
+import Trending from 'GitHubTrending';
+const AUTH_TOKEN = 'fd82d1e882462e23b8e88aa82198f166';
 export const FLAG_STORE = {flag_popular: Symbol('popular'), flag_trending: Symbol('trending')};
 export default class DataStore {
 
@@ -94,7 +93,12 @@ export default class DataStore {
                         reject(e);
                     });
             } else {
-                new GitHubTrending().fetchTrending(url)
+                if (this.need) {
+                    return;
+                }
+                this.need = true;
+                console.log('GitHubTrending：', url);
+                new Trending(AUTH_TOKEN).fetchTrending(url)
                     .then(items => {
                         if (!items) {
                             throw new Error('responseData is null');
@@ -103,6 +107,7 @@ export default class DataStore {
                             resolve(items);
                         }
                     }).catch(e => {
+                        console.log('GitHubTrending--fail:', url, e)
                     reject(e);
                 });
             }

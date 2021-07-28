@@ -8,21 +8,21 @@ import {handleData} from '../ActionUtil';
  * @param url
  * @param pageSize
  */
-export function onLoadPopularData(storeName, url, pageSize) {
+export function onLoadTrendingData(storeName, url, pageSize) {
     return dispatch => {
         dispatch({
-            type: types.POPULAR_REFRESH,
+            type: types.TRENDING_REFRESH,
             storeName,
         });
         let dataStore = new DataStore();
-        dataStore.fetchData(url, FLAG_STORE.flag_popular)
+        dataStore.fetchData(url, FLAG_STORE.flag_trending)
             .then(data => {
-                handleData(types.POPULAR_REFRESH_SUCCESS, dispatch, storeName, data, pageSize);
+                handleData(types.TRENDING_REFRESH_SUCCESS, dispatch, storeName, data, pageSize);
             })
             .catch(error => {
                 console.log(error);
                 dispatch({
-                    type: types.POPULAR_REFRESH_FAIL,
+                    type: types.TRENDING_REFRESH_FAIL,
                     storeName,
                     error,
                 });
@@ -38,7 +38,7 @@ export function onLoadPopularData(storeName, url, pageSize) {
  * @param dataArray  原始数据
  * @param callback  回调函数，可以通过回调函数来向调用页面通信：比如异常信息展示等
  */
-export function onLoadMorePopular(storeName, pageIndex, pageSize, dataArray = [], callback) {
+export function onLoadMoreTrending(storeName, pageIndex, pageSize, dataArray = [], callback) {
     return dispatch => {
         setTimeout(() => {  //模拟网络请求
             if ((pageIndex - 1) * pageSize >= dataArray.length) { //已加载完全部数据
@@ -46,7 +46,7 @@ export function onLoadMorePopular(storeName, pageIndex, pageSize, dataArray = []
                     callback('no more');
                 }
                 dispatch({
-                    type: types.POPULAR_LOAD_MORE_FAIL,
+                    type: types.TRENDING_LOAD_MORE_FAIL,
                     error: 'no more',
                     storeName,
                     pageIndex: --pageIndex,
@@ -56,7 +56,7 @@ export function onLoadMorePopular(storeName, pageIndex, pageSize, dataArray = []
                 //计算本次可载入的最大数据量
                 const max = pageSize * pageIndex > dataArray.length ? dataArray.length : pageSize * pageIndex;
                 dispatch({
-                    type: types.POPULAR_LOAD_MORE_SUCCESS,
+                    type: types.TRENDING_LOAD_MORE_SUCCESS,
                     storeName,
                     pageIndex,
                     projectModels: dataArray.slice(0, max),
@@ -65,3 +65,4 @@ export function onLoadMorePopular(storeName, pageIndex, pageSize, dataArray = []
         }, 500);
     };
 }
+
