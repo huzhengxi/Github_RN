@@ -93,10 +93,6 @@ export default class DataStore {
                         reject(e);
                     });
             } else {
-                if (this.need) {
-                    return;
-                }
-                this.need = true;
                 console.log('GitHubTrending：', url);
                 new Trending(AUTH_TOKEN).fetchTrending(url)
                     .then(items => {
